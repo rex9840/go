@@ -10,9 +10,10 @@ comment
 package main
 
 import (
-        "fmt"
-        // . "fmt" // alias where we dont need to use fmt. prefix 
+	"fmt"
+	// . "fmt" // alias where we dont need to use fmt. prefix
 	m "math"
+	"os"
 )
 
 func main() {
@@ -40,9 +41,9 @@ func main() {
 	fmt.Println("\tSum is: ", sum)
 	byteValue := byte(65) // alais for uint8
 	fmt.Println(byteValue)
-	fmt.Printf("%T", byteValue)
+	fmt.Printf("%T\n", byteValue)
 	runeValue := rune(65) // alais for int32
-	fmt.Printf("%T", runeValue)
+	fmt.Printf("%T\n", runeValue)
 
 	/* array */
 
@@ -56,18 +57,164 @@ func main() {
 
 	fmt.Println(oneTofive)
 
-        oneTofive_cpy := oneTofive // copy of the array  
-        oneTofive_cpy[0] = 100 
-        println(oneTofive[0]==oneTofive_cpy[0]) 
+	// slicing
 
+	/*
+		print and println are the lowaer level functions and fmt.Println is the higher level function which internally calls the print and println functions where println and print might not support some types like slice, map, struct etc. and might return references
+	*/
 
-        //slicing
-        
+	oneTofive_cpy := oneTofive // copy of the array
+	oneTofive_cpy[0] = 100
+	println(oneTofive[0] == oneTofive_cpy[0])
+
+	_ = oneTofive[1:3] // slicing from index 1 to 3
+
+	// slice are different than array as they are dynamic in nature
+
+	s := []int{1, 2, 3, 4, 5} // slice
+	s = append(s, 6)          // append element to the slice
+
+	println("slice:", s, "length:", len(s), "capacity:", cap(s)) // here while printing the slice the reference value is returned
+	fmt.Println("slice:", s)
+
+	// pointers
+
+	var p *uint
+	p = &a
+	fmt.Println(*p, p)
+
+	q := &a
+	fmt.Println(*q, q)
+
+	pr, qr, rr := testMemomryGo()
+	fmt.Println(*pr, *qr, *rr)
+	println("pr:", pr, "qr:", qr, "rr:", rr)
+
+	// maps
+
+	/* maps can grow dynamically and are of type hash, dict, associative array . */
+
+	m := map[string]int{"one": 1, "two": 2, "three": 3}
+	var m1 = map[string]int{"one": 1, "two": 2, "three": 3}
+	println(m["one"], m1["two"])
+
+	// alocating and initiating for map
+
+	var m2 = make(map[string]int)
+	m2["one"] = 1
+	m2["two"] = 2
+
+	m3 := make(map[string]int)
+	m3["one"] = 1
+
+	fmt.Println(m2, m3)
+	println(m2, m3) //return memory address
+
+	if value, ok := m3["one"]; ok {
+		fmt.Println(value)
+	}
+
+	// file handeling
+
+	file, err := os.Create("test.txt")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Fprint(file, "Hello World")
+	defer file.Close()
+	content, err := os.ReadFile("test.txt")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	print(string(content))
+	/*
+		delay the execution of the close function until the end of the function which means the file will be closed at the end of the main.
+		if there are multiple defer function follows the LIFO principle as the last defer function is called first before closing the end of the functions
+	*/
+
+	// flow control
+
+	// if statement
+	if false {
+	} else if false {
+	} else {
+		println("else")
+	}
+
+	// switch statements
+
+	val := 10.0
+
+	switch int(val) {
+	case 10:
+		fmt.Println("value is 10")
+		fallthrough // fallthrough to the next case its like after case satisfied eventhoug the next case is not satisfied it will execute the next case
+	default:
+		fmt.Println("value is not 10")
+	}
+
+	// type switch  case
+
+	var type1 interface{}
+	// the type is supported because the type1 is a interface type
+
+	switch type1.(type) {
+	case int:
+		fmt.Println("type is int")
+	case string:
+		fmt.Println("type is string")
+	case fmt.Stringer:
+		fmt.Println("type is fmt.Stringer interface")
+	default:
+		fmt.Println("type not found")
+	}
+
+	for x := 0; x < 10; x++ {
+		print(x)
+	}
+	println()
+
+	var i int = 10
+	for ; i > 0; i-- {
+		print(i)
+	}
+	println()
+
+	var list [5]int = [...]int{1, 2, 3, 4, 5}
+	for indx, v := range list { // range returns the index and value of the list
+		fmt.Printf("index: %d, value: %d\n", indx, v)
+	}
+
+	for {
+		fmt.Println("infinite loop")
+		break
+	}
+
+	for key, value := range map[string]int{"one": 1, "two": 2, "three": 3} {
+                fmt.Printf("key: %s, value: %d, type:%T\n", key, value,value)
+	}
+
+        xBigThanY := func()(bool){  //anonymous function 
+                return x > int(y) 
+        }
+        println(xBigThanY()) 
+
 }
 
 func testCaseGo() (x int, y uint) {
 	x = 10
 	y = 20
 	return
+}
 
+func testMemomryGo() (*int, *int, *int) {
+	var alloc *int = new(int) //allocate memory for type int and return a pointer to it
+	slice := make([]int, 5)   //contiguous  allocate memory
+	slice[2] = 10
+	value := 23
+	alloc = &value
+	return alloc, &slice[1], &slice[2]
 }
