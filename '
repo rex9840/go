@@ -214,8 +214,7 @@ label:
 	if counter < 2 {
 		goto label
 	}
-	testFunctionDecorators()
-	testStruct()
+	TestFunctionDecorators()
 
 }
 
@@ -234,7 +233,7 @@ func testMemomryGo() (*int, *int, *int) {
 	return alloc, &slice[1], &slice[2]
 }
 
-func testFunctionDecorators() {
+func TestFunctionDecorators() {
 	var input string
 	fmt.Println("Enter the input string: ")
 	fmt.Scanf("%s", &input)
@@ -251,33 +250,15 @@ func dec_func(input string) func(before, after string) string {
 	}
 }
 
-type TestInter interface {
-	returnName() string
+type TestInter interface { 
+      testFunc() string
+
 }
 
 type TestStruct struct {
-	name string
-        age int 
+        name string 
 }
 
-// implementing the method for the struct 
-//without interface implementation the method is called as the method of the struct  
-func (t *TestStruct) testFunc() int { // pointer receiver as it works on the same instance of the struct 
-	return t.age
-}
-// interface implementation as the method is called as the method of the interface  
-func (t TestStruct) returnName() (actual_name string, edited_name string) {  // value receiver as it works on the copy of the struct 
-        actual_name = t.name 
-        t.name = "edited" 
-        edited_name = t.name  
-        return 
-}
-func testStruct() {
-        var t1 TestStruct = TestStruct{name: "test", age: 10} 
-	println(t1.testFunc())
-        println(t1.returnName()) 
-        println(t1.name) 
-}
-
-// implementing the interface 
-
+func (t *TestStruct) testFunc() string { 
+        return t.name
+} 
