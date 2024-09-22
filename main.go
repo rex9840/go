@@ -252,32 +252,45 @@ func dec_func(input string) func(before, after string) string {
 }
 
 type TestInter interface {
-	returnName() string
+	returnName() (string, string)
 }
 
 type TestStruct struct {
 	name string
-        age int 
+	age  int
 }
 
-// implementing the method for the struct 
-//without interface implementation the method is called as the method of the struct  
-func (t *TestStruct) testFunc() int { // pointer receiver as it works on the same instance of the struct 
+// implementing the method for the struct
+// without interface implementation the method is called as the method of the struct
+func (t *TestStruct) testFunc() int { // pointer receiver as it works on the same instance of the struct
 	return t.age
 }
-// interface implementation as the method is called as the method of the interface  
-func (t TestStruct) returnName() (actual_name string, edited_name string) {  // value receiver as it works on the copy of the struct 
-        actual_name = t.name 
-        t.name = "edited" 
-        edited_name = t.name  
-        return 
+
+// interface implementation as the method is called as the method of the interface
+func (t TestStruct) returnName() (actual_name string, edited_name string) { // value receiver as it works on the copy of the struct
+	actual_name = t.name
+	t.name = "edited"
+	edited_name = t.name
+	return
 }
 func testStruct() {
-        var t1 TestStruct = TestStruct{name: "test", age: 10} 
+	var t1 TestStruct = TestStruct{name: "test", age: 10}
 	println(t1.testFunc())
-        println(t1.returnName()) 
-        println(t1.name) 
+	n1, n2 := t1.returnName()
+	println(n1, n2)
+	println(t1.name)
+
+	//reusable code with interface
+	var t2 TestInter
+	t2 = t1 // as t1 implements the TestInter interface
+	println(t2.returnName())
+
+        vardicParm(10, "string") // vardic parametres in a function
 }
 
-// implementing the interface 
-
+// vardic parametres in a function
+func vardicParm(input ...any) {
+	for _, value := range input {
+		fmt.Println(value)
+	}
+}
