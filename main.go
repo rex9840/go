@@ -292,5 +292,11 @@ func testStruct() {
 func vardicParm(input ...any) {
 	for _, value := range input {
 		fmt.Println(value)
-	}
+        }	
 }
+
+
+
+
+
+
