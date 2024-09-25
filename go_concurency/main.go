@@ -63,6 +63,7 @@ func main() {
 	/*
 		The deadlock can happen due to the way channel communication works in Go. When part of a program is writing to a channel, it will wait until another part of the program reads from that channel before continuing on. Similarly, if a program is reading from a channel it will wait until another part of the program writes to that channel before it continues
 	*/
+        // in deadlock the coroutines will be in the blocked state 
 
 	// instead of using chan <- int and <- chan int we can use chan int to read and write from the channel  to prevent deadlock
 
